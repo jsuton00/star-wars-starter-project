@@ -8,6 +8,8 @@ export const fetchMovies = async () => {
 	return await axios.get('https://swapi.dev/api/films/');
 };
 
-export const fetchStarWars = async (endpoint) => {
-	return await axios.get(`https://swapi.dev/api/${endpoint}`);
+export const searchStarWars = async (endpoint, searchTerm) => {
+	return await axios.get(
+		`https://swapi.dev/api/${endpoint}/?search=${searchTerm}`,
+	);
 };

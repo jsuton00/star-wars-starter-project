@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchMovies, fetchPeople, fetchStarWars } from '../apis/swApi';
+import { searchStarWars } from '../apis/swApi';
 import SearchForm from '../components/SearchForm';
 import SearchResults from '../components/SearchResults';
 import { SELECT_ENDPOINTS } from '../constants/selectEndpoints';
@@ -8,51 +8,34 @@ import '../styles/pages/home.css';
 export default function Home() {
 	const endpointOptions = SELECT_ENDPOINTS;
 	const [endpointValue, setEndpointValue] = useState('');
-	const [movies, setMovies] = useState('');
-	const [people, setPeople] = useState('');
-	const [endpointData, setEndpointData] = useState('');
+	const [searchResults, setSearchResults] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState(false);
+	const [searchTerm, setSearchTerm] = useState('');
 
-	const fetchingMovies = async () => {
-		try {
-			setIsLoading(true);
-			const response = await fetchMovies();
-			const results = await response.data.results;
-			setMovies(results);
-		} catch (err) {
-			setIsError(true);
-			console.log('Error:', err.message);
-		}
-	};
-
-	const fetchingPeople = async () => {
-		try {
-			setIsLoading(true);
-			const response = await fetchPeople();
-			const results = await response.data.results;
-			setPeople(results);
-			setIsLoading(false);
-		} catch (err) {
-			setIsError(true);
-			console.log('Error:', err);
-			setIsLoading(false);
-		}
-	};
-
-	const fetchingStarWars = async (endpointValue) => {
+	const searchingStarWars = async (endpointValue, searchTerm) => {
 		try {
 			setIsLoading(true);
 			let response;
 			if (endpointValue) {
-				response = await fetchStarWars(endpointValue);
-				let responseData = await response.data.results;
-				setEndpointData(responseData);
-				setIsLoading(false);
+				if (searchTerm) {
+					response = await searchStarWars(endpointValue, searchTerm);
+					let responseData = await response.data.results;
+					setSearchResults(responseData);
+					setIsLoading(false);
+				}
 			}
-		} catch (err) {
+			if (searchTerm) {
+				if (endpointValue) {
+					response = await searchStarWars(endpointValue, searchTerm);
+					let responseData = await response.data.results;
+					setSearchResults(responseData);
+					setIsLoading(false);
+				}
+			}
+		} catch (error) {
 			setIsError(true);
-			console.log('Error:', err);
+			console.log('Error:', error);
 			setIsLoading(false);
 		}
 	};
@@ -69,17 +52,20 @@ export default function Home() {
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			if (endpointValue) {
-				return fetchingStarWars(endpointValue);
-			} else {
-				fetchingMovies();
-				fetchingPeople();
+				if (searchTerm.length > 0) {
+					return searchingStarWars(endpointValue, searchTerm);
+				}
+			} else if (searchTerm.length > 0) {
+				if (endpointValue) {
+					return searchingStarWars(endpointValue, searchTerm);
+				}
 			}
-		});
+		}, 500);
 
 		return () => {
 			clearTimeout(timer);
 		};
-	}, [endpointValue]);
+	}, [endpointValue, searchTerm]);
 
 	return (
 		<div id="home" className="home container-fluid">
@@ -89,13 +75,16 @@ export default function Home() {
 						selectEndpoints={selectEndpoints}
 						rbOptions={endpointOptions}
 						endpointOption={endpointValue}
+						searchValue={searchTerm}
+						setInputValue={setSearchTerm}
+						searchStarWars={searchingStarWars}
 					/>
 				</div>
 				<div className="search-container-col">
 					<SearchResults
-						people={people}
-						movies={movies}
-						endpointData={endpointData}
+						searchResults={searchResults}
+						loadingStatus={isLoading}
+						errorStatus={isError}
 					/>
 				</div>
 			</div>

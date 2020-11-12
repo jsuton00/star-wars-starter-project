@@ -2,10 +2,34 @@ import React from 'react';
 import '../styles/components/searchForm.css';
 
 export default function SearchForm(props) {
-	const { selectEndpoints, rbOptions, endpointValue } = props;
+	const {
+		selectEndpoints,
+		rbOptions,
+		endpointValue,
+		searchValue,
+		setInputValue,
+		searchStarWars,
+	} = props;
 
-	const handleChange = (e) => {
+	const handleSelectChange = (e) => {
 		return selectEndpoints(e.target.value);
+	};
+
+	const handleInputChange = (e) => {
+		return setInputValue(e.target.value);
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (endpointValue) {
+			if (searchValue.length > 0) {
+				return await searchStarWars(endpointValue, searchValue);
+			}
+		} else if (searchValue > 0) {
+			if (endpointValue) {
+				return await searchStarWars(endpointValue, searchValue);
+			}
+		}
 	};
 
 	return (
@@ -23,7 +47,7 @@ export default function SearchForm(props) {
 										type="radio"
 										value={option}
 										className="select-option"
-										onChange={handleChange}
+										onChange={handleSelectChange}
 									/>
 									<label className="select-options-label">
 										{option === 'films' ? 'Movies' : 'People'}
@@ -38,6 +62,8 @@ export default function SearchForm(props) {
 						name="search-input"
 						type="text"
 						placeholder="e.g. Chewbacca, Yoda, Boba Fett"
+						onChange={handleInputChange}
+						value={searchValue}
 					/>
 				</div>
 				<div className="form-controls submit row">
@@ -46,6 +72,7 @@ export default function SearchForm(props) {
 						name="btnSubmit"
 						type="button"
 						className="btnSubmit-disabled btnSubmit-default"
+						onClick={handleSubmit}
 					>
 						Search
 					</button>

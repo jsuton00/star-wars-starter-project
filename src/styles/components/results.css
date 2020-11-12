@@ -1,12 +1,10 @@
 .search-results-list {
-	position: relative;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
 	height: 100%;
-	padding: 0.5rem 1rem;
-	margin: 0 auto;
+	padding: 0.5rem 0;
 }
 
 .search-results-list-item {
@@ -15,20 +13,17 @@
 	align-items: center;
 	width: 100%;
 	padding: 0.25rem 0.5rem;
-	margin: 0 auto;
 }
 
-.movies-results-title,
-.people-results-name,
-.endpoint-results-name {
-	flex-basis: 59%;
+.search-results-name {
+	flex-basis: 61%;
 	width: 100%;
 	font-size: 1.125rem;
 	font-weight: 600;
 }
 
 .results-details-item {
-	flex-basis: 24%;
+	flex-basis: 34%;
 	width: 100%;
 }
 
