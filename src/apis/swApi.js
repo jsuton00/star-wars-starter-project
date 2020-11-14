@@ -1,11 +1,15 @@
 import axios from 'axios';
 
-export const fetchPeople = async () => {
-	return await axios.get('https://swapi.dev/api/people/');
+export const fetchPeople = async (url) => {
+	return await axios.get(url);
 };
 
-export const fetchMovies = async () => {
-	return await axios.get('https://swapi.dev/api/films/');
+export const fetchMovies = async (url) => {
+	return await axios.get(url);
+};
+
+export const fetchStarWars = async (url) => {
+	return await axios.get(url);
 };
 
 export const searchStarWars = async (endpoint, searchTerm) => {

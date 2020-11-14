@@ -14,8 +14,18 @@ export default function SearchResults(props) {
 				<hr className="divider" />
 				<div className="search-results-content row">
 					{loadingStatus && <Loader />}
-					{searchResults ? (
-						<Results searchResults={searchResults} />
+					{searchResults.length > 0 ? (
+						<div className="search-results-list list-group">
+							{searchResults.map((result, index) => {
+								return (
+									<Results
+										key={index}
+										searchId={index + 1}
+										searchResults={result}
+									/>
+								);
+							})}
+						</div>
 					) : (
 						<SearchError />
 					)}
